@@ -1,7 +1,7 @@
 import styles from "./App.module.css";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { yupResolver } from "./../node_modules/@hookform/resolvers/yup/src/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 export function App() {
   return (
