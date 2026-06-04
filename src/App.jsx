@@ -2,6 +2,7 @@ import styles from "./App.module.css";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect, useRef } from "react";
 
 const schema = yup.object({
   email: yup.string().required("Введите email").email("Некорректный email"),
@@ -21,7 +22,7 @@ export function App() {
     register,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -32,11 +33,19 @@ export function App() {
     reset();
   };
 
+  const submitRef = useRef(null);
+
+  useEffect(() => {
+    if (isValid) {
+      submitRef.current?.focus();
+    }
+  }, [isValid]);
   return (
     <div className={styles.app}>
       <form className={styles.form__app} onSubmit={handleSubmit(onSubmit)}>
         <input
           type="email"
+          placeholder="Введите email"
           className={styles.input__app}
           {...register("email")}
         />
@@ -45,6 +54,7 @@ export function App() {
         )}
         <input
           type="password"
+          placeholder="Введите пароль"
           className={styles.input__app}
           {...register("password")}
         />
@@ -53,6 +63,7 @@ export function App() {
         )}
         <input
           type="password"
+          placeholder="Повторите пароль"
           className={styles.input__app}
           {...register("repeatPassword")}
         />
@@ -61,8 +72,13 @@ export function App() {
             {errors.repeatPassword.message}
           </div>
         )}
-        <button className={styles.btn__send} type="submit" disabled={false}>
-          Отправить
+        <button
+          className={styles.btn__send}
+          type="submit"
+          disabled={!isValid}
+          ref={submitRef}
+        >
+          Зарегистрироваться
         </button>
       </form>
     </div>
