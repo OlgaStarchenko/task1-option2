@@ -3,6 +3,19 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+const schema = yup.object({
+  mail: yup.string().required("Введите email").email("Некорректный email"),
+  password: yup
+    .string()
+    .required("Введите пароль")
+    .min(6, "Должно быть не менее 6 символов")
+    .max(12, "Должно быть не более 12 символов"),
+  repeatPassword: yup
+    .string()
+    .required("Введите пароль повторно")
+    .oneOf([yup.ref("password")], "Пароли должны совпадать"),
+});
+
 export function App() {
   const {
     register,
