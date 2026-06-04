@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 const schema = yup.object({
-  mail: yup.string().required("Введите email").email("Некорректный email"),
+  email: yup.string().required("Введите email").email("Некорректный email"),
   password: yup
     .string()
     .required("Введите пароль")
@@ -19,12 +19,17 @@ const schema = yup.object({
 export function App() {
   const {
     register,
+    reset,
     handleSubmit,
-    formData: { errors },
-  } = useForm();
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "onChange",
+  });
 
   const onSubmit = (data) => {
     console.log(data);
+    reset();
   };
 
   return (
@@ -35,19 +40,27 @@ export function App() {
           className={styles.input__app}
           {...register("email")}
         />
-        {/* <div className={styles.error__label}>Ошибка</div> */}
+        {errors.email && (
+          <div className={styles.error__label}> {errors.email.message} </div>
+        )}
         <input
           type="password"
           className={styles.input__app}
           {...register("password")}
         />
-        {/* <div className={styles.error__label}>Ошибка</div> */}
+        {errors.password && (
+          <div className={styles.error__label}>{errors.password.message}</div>
+        )}
         <input
           type="password"
           className={styles.input__app}
           {...register("repeatPassword")}
         />
-        {/* <div className={styles.error__label}>Ошибка</div> */}
+        {errors.repeatPassword && (
+          <div className={styles.error__label}>
+            {errors.repeatPassword.message}
+          </div>
+        )}
         <button className={styles.btn__send} type="submit" disabled={false}>
           Отправить
         </button>
